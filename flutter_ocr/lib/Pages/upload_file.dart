@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ocr/Components/custom_drawer.dart';
+import 'package:flutter_ocr/Pages/Repport/card_summary_page.dart';
+import 'package:flutter_ocr/Pages/Repport/card_summary_test.dart';
 import 'package:flutter_ocr/Services/file_upload_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:logger/logger.dart';
@@ -26,7 +28,7 @@ class _UploadFileState extends State<UploadFile> {
         _selectedFile = File(result.files.single.path!);
         setState(() {
           _isSelected = true;
-        });// Reset the upload status
+        }); // Reset the upload status
         logger.i('Selected file: ${_selectedFile!.path}');
       });
     }
@@ -56,7 +58,6 @@ class _UploadFileState extends State<UploadFile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Upload File'),
-
       ),
       drawer: const Customdrawer(),
       body: Padding(
@@ -100,14 +101,36 @@ class _UploadFileState extends State<UploadFile> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: _uploadFile,
+                  // onPressed: _uploadFile,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CardSummaryPage(imageFile: _selectedFile,)));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isSelected
                         ? Colors.white
                         : Colors.grey, // Change color based on upload status
                     foregroundColor: Colors.black,
                   ),
-                  child: const Text('Submit'),
+                  child: const Text('Details'),
+                ),
+                ElevatedButton(
+                  // onPressed: _uploadFile,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CardSummaryTest()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isSelected
+                        ? Colors.white
+                        : Colors.grey, // Change color based on upload status
+                    foregroundColor: Colors.black,
+                  ),
+                  child: const Text('One Block'),
                 ),
               ],
             ),
