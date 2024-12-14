@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  fastapi:
+    build:
+      context: ./ocr-service-env/fastapi-service
+    ports:
+      - "8000:8000"
+    networks:
+      - ocr-network
+
+  streamlit:
+    build:
+      context: ./streamlit-service
+    ports:
+      - "8501:8501"
+    depends_on:
+      - fastapi
+    networks:
+      - ocr-network
+
+networks:
+  ocr-network:
+    driver: bridge
