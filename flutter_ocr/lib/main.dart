@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ocr/Pages/upload_file.dart';
+import 'Pages/Auth/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        '/': (context) => const UploadFile(),
+        '/': (context) => const LoginScreen(),
+        '/upload': (context) => const UploadFile(),
       },
     );
   }
