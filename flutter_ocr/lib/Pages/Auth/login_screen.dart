@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ocr/Services/auth_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:logger/logger.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -8,7 +11,37 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final Logger logger = Logger();
   bool isLogin = true; // Toggle for login or signup
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final AuthService authService = AuthService();
+
+  Future<void> _authenticate() async {
+    try {
+      if (isLogin) {
+        final response = await authService.login(
+          usernameController.text.trim(),
+          passwordController.text.trim(),
+        );
+        logger.i('Login Successful: $response');
+      } else {
+        final response = await authService.signUp(
+          usernameController.text.trim(),
+          emailController.text.trim(),
+          passwordController.text.trim(),
+        );
+        logger.i('Sign Up Successful: $response');
+      }
+    } catch (e) {
+      logger.i('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +52,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // App Title
               const Text(
                 'FileProcessor',
                 style: TextStyle(
@@ -37,8 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-
-              // Login/Sign Up Form Container
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 padding: const EdgeInsets.all(20),
@@ -113,14 +143,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Input Fields for Login/Sign Up
+                    // Input Fields
                     if (!isLogin) ...[
-                      const Text(
-                        'Username',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      const Text('Username',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
                       TextField(
+                        controller: usernameController,
                         decoration: InputDecoration(
                           hintText: 'Enter your username',
                           filled: true,
@@ -133,12 +162,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 16),
                     ],
-                    const Text(
-                      'Email',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text('Email',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         hintText: 'Enter your email',
                         filled: true,
@@ -150,12 +178,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Password',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    const Text('Password',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: 'Enter your password',
@@ -174,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: double.infinity,
                       height: 48,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: _authenticate,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
@@ -187,42 +214,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
-
-                    // Forgot Password Text
-                    if (isLogin)
-                      Center(
-                        child: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+                    const SizedBox(height: 20),
+                    // Google & Apple Buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _socialButton(
+                            'Google',
+                            const Icon(FontAwesomeIcons.google,
+                                color: Colors.black)),
+                        const SizedBox(width: 20),
+                        _socialButton(
+                            'Apple',
+                            const Icon(FontAwesomeIcons.apple,
+                                color: Colors.black)),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 20),
-
-              // OR continue with text
-              const Text(
-                'or continue with',
-                style: TextStyle(color: Colors.black54),
-              ),
-              const SizedBox(height: 12),
-
-              // Google & Apple Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _socialButton('Google', Icons.g_translate),
-                  const SizedBox(width: 20),
-                  _socialButton('Apple', Icons.apple),
-                ],
               ),
             ],
           ),
@@ -232,10 +241,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // Social Button Widget
-  Widget _socialButton(String text, IconData icon) {
+  Widget _socialButton(String text, Icon icon) {
     return ElevatedButton.icon(
       onPressed: () {},
-      icon: Icon(icon, color: Colors.black),
+      icon: icon,
       label: Text(
         text,
         style: const TextStyle(color: Colors.black),
