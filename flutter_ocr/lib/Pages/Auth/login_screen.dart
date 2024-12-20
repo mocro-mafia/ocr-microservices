@@ -39,12 +39,19 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         logger.i('Signing up...');
-        final response = await authService.signUp(
-          usernameController.text.trim(),
+        final response = await authService.registerBySpring(
           emailController.text.trim(),
+          usernameController.text.trim(),
           passwordController.text.trim(),
         );
         logger.i('Sign Up Successful: $response');
+        if (response['result'] == 'success') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const UploadFile()),
+          );
+          logger.w('Login Successful: $response');
+        }
       }
     } catch (e) {
       logger.i('Error: $e');

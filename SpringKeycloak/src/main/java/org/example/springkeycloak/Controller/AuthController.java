@@ -1,25 +1,34 @@
 package org.example.springkeycloak.Controller;
 
-import org.springframework.http.ResponseEntity;
+import org.example.springkeycloak.DTO.RegisterDTO;
+import org.example.springkeycloak.Service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
+import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 @RestController
 @RequestMapping("/api")
 public class AuthController {
+    @Autowired
+    private AuthService authService;
+
+    private static final Logger logger = Logger.getLogger(AuthController.class.getName());
     @GetMapping("/public/test")
     public String test() {
         return "Public endpoint works!";
+    }
+
+    @PostMapping("/public/register")
+    public Map<String,Object> register(@RequestBody RegisterDTO registerDTO) {
+        Map<String,Object> response = authService.registerUser(registerDTO);
+        logger.info("response status : " + response.get("status"));
+        logger.info("response body : " + response.get("body"));
+        return response;
     }
 
 
@@ -29,30 +38,11 @@ public class AuthController {
         System.out.println(jwt.getClaims());
         return "Hello, " + jwt.getClaimAsString("preferred_username");
     }
-    @GetMapping("/api/user2")
-    public String userEndpoint2(@AuthenticationPrincipal Jwt jwt) {
-        System.out.println("I am here \n\n\n\n\n");
-        // Debugging roles
-        var authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        System.out.println("Authorities: ");
-        for (GrantedAuthority authority : authorities) {
-            System.out.println(authority.getAuthority());
-        }
-
-        return "Hello, " + jwt.getClaimAsString("preferred_username");
-    }
 
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public String adminEndpoint() {
         return "Hello, Admin!";
     }
-    @GetMapping("/api/test-auth")
-    public ResponseEntity<?> testAuth(@AuthenticationPrincipal Jwt jwt) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("token_claims", jwt.getClaims());
-        response.put("authorities", SecurityContextHolder.getContext()
-                .getAuthentication().getAuthorities());
-        return ResponseEntity.ok(response);
-    }
+
 }

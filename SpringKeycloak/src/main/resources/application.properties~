@@ -10,6 +10,3 @@ keycloak.ssl-required=external
 keycloak.credentials.secret="N30o8iKRwEKd2I7H6ClofRNfE4nx1VLR"
 keycloak.use-resource-role-mappings=true
 keycloak.bearer-only=true
-
-logging.level.root=INFO
-logging.level.org.springframework.security=DEBUG

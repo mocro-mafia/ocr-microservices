@@ -44,7 +44,7 @@ public class KeycloakJwtAuthenticationConverter  implements Converter<Jwt, Abstr
         for (String role : roles) {
             logger.info("Extracted role: " + roles);
         }
-
+        
 
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.replace("-", "_")))
