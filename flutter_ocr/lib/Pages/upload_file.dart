@@ -21,6 +21,15 @@ class _UploadFileState extends State<UploadFile> {
   FileUploadService fileUploadService = FileUploadService();
   Logger logger = Logger();
 
+  // * get token info from hive
+  // void getTokenInfo() {
+  //   var box = Hive.box<AuthToken>('authTokenBox');
+  //   AuthToken? authToken = box.get('authToken');
+  //   if (authToken != null) {
+  //     logger.i('Retrieved AuthToken: ${authToken.accessToken}');
+  //   }
+  // }
+
   void _selectFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.single.path != null) {
@@ -106,7 +115,9 @@ class _UploadFileState extends State<UploadFile> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CardSummaryPage(imageFile: _selectedFile,)));
+                            builder: (context) => CardSummaryPage(
+                                  imageFile: _selectedFile,
+                                )));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isSelected

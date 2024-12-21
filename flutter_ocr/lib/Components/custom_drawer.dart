@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ocr/Pages/Auth/login_screen.dart';
 import 'package:flutter_ocr/Pages/upload_file.dart';
-
+import 'package:hive/hive.dart';
 class Customdrawer extends StatelessWidget {
   const Customdrawer({super.key});
-
+  
   @override
 
   Widget build(BuildContext context) {
@@ -84,8 +85,18 @@ class Customdrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.exit_to_app_outlined),
                   title: const Text('Logout'),
-                  onTap: () {
-                    // Add logout functionality
+                  onTap: () async {
+
+
+                    var box = await Hive.openBox('authBox');
+                    if (box.containsKey('authToken')) {
+                      await box.delete('authToken');
+                      
+                    }
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    );
                   },
                 ),
               ],

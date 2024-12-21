@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ocr/Pages/upload_file.dart';
 import 'package:flutter_ocr/Services/auth_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logger/logger.dart';
@@ -22,18 +23,35 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _authenticate() async {
     try {
       if (isLogin) {
+        logger.i('Logging in...');
+        logger.i('Username: ${emailController.text.trim()}');
+        logger.i('Password: ${passwordController.text.trim()}');
         final response = await authService.login(
-          usernameController.text.trim(),
-          passwordController.text.trim(),
-        );
-        logger.i('Login Successful: $response');
-      } else {
-        final response = await authService.signUp(
-          usernameController.text.trim(),
           emailController.text.trim(),
           passwordController.text.trim(),
         );
+        if (response['result'] == 'success') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const UploadFile()),
+          );
+          logger.w('Login Successful: $response');
+        }
+      } else {
+        logger.i('Signing up...');
+        final response = await authService.registerBySpring(
+          emailController.text.trim(),
+          usernameController.text.trim(),
+          passwordController.text.trim(),
+        );
         logger.i('Sign Up Successful: $response');
+        if (response['result'] == 'success') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const UploadFile()),
+          );
+          logger.w('Login Successful: $response');
+        }
       }
     } catch (e) {
       logger.i('Error: $e');
