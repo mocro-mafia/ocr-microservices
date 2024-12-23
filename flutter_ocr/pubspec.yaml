@@ -39,8 +39,12 @@ dependencies:
   logger: 
   file_picker: 8.1.4
   font_awesome_flutter:
+  hive:
+  hive_flutter:
 
 dev_dependencies:
+  hive_generator:
+  build_runner:
   flutter_test:
     sdk: flutter
 
