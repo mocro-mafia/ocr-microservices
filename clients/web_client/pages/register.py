@@ -29,5 +29,6 @@ def show():
         })
         if response.status_code == 200:
             st.success("Registration successful")
+            st.session_state["selected_page"] = "Login"
         else:
             st.error(response.json().get("detail"))
