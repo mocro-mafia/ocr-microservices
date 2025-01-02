@@ -1,3 +1,4 @@
+# filepath: /C:/Users/Namous Mohamed/Desktop/ocr-microservices/services/auth_service/app/schemas.py
 from pydantic import BaseModel, EmailStr
 
 class UserBase(BaseModel):
@@ -19,3 +20,6 @@ class UserLogin(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class UserUpdate(UserBase):
+    password: str
