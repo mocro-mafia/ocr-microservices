@@ -1,10 +1,11 @@
-# filepath: /C:/Users/Namous Mohamed/Desktop/ocr-microservices/clients/web_client/pages/register.py
 import streamlit as st
 import requests
 import re
 
 def show():
     st.title("Register")
+    st.write("### Create a new account to get started!")
+
     register_email = st.text_input("Email", key="register_email")
     register_full_name = st.text_input("Full Name", key="register_full_name")
     register_password = st.text_input("Password", type="password", key="register_password")
@@ -28,7 +29,7 @@ def show():
             "password": register_password
         })
         if response.status_code == 200:
-            st.success("Registration successful")
+            st.success("Registration successful! You can now log in.")
             st.session_state["selected_page"] = "Login"
         else:
             st.error(response.json().get("detail"))

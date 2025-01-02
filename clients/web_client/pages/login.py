@@ -1,4 +1,3 @@
-# filepath: /C:/Users/Namous Mohamed/Desktop/ocr-microservices/clients/web_client/pages/login.py
 import streamlit as st
 import requests
 import re
@@ -28,6 +27,11 @@ def show():
         if response.status_code == 200:
             st.success("Login successful")
             token = response.json().get("access_token")
-            st.write(f"Access Token: {token}")
+            st.session_state["logged_in"] = True
+            st.session_state["selected_page"] = "Profile"
+            st.session_state["access_token"] = token  # Store the token in session state
+            
+            # Rerun the app to update the navbar
+            st.rerun()  # Change this line
         else:
             st.error(response.json().get("detail"))
