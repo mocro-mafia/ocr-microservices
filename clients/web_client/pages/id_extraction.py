@@ -1,3 +1,4 @@
+# filepath: /C:/Users/Namous Mohamed/Desktop/ocr-microservices/clients/web_client/pages/id_extraction.py
 import streamlit as st
 import requests
 from PIL import Image
@@ -20,15 +21,16 @@ def show():
                     files={"file": uploaded_file.getvalue()}
                 )
                 if response.status_code == 200:
-                    id_data = response.json()
+                    extracted_text = response.json().get("extracted_text")
                     st.success("Text extracted successfully!")
                     st.write("### Extracted Information")
-                    st.write(f"**ID Number:** {id_data['id_number']}")
-                    st.write(f"**Full Name (Latin):** {id_data['full_name_latin']}")
-                    st.write(f"**Birth Date:** {id_data['birth_date']}")
-                    st.write(f"**Expiry Date:** {id_data['expiry_date']}")
+                    st.write(f"**Extracted Text:** {extracted_text}")
                 else:
-                    st.error("Failed to extract text from the image.")
+                    try:
+                        error_detail = response.json().get("detail")
+                    except requests.exceptions.JSONDecodeError:
+                        error_detail = response.text
+                    st.error(f"Failed to extract text from the image: {error_detail}")
 
 if __name__ == "__main__":
     show()
