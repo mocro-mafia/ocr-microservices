@@ -6,3 +6,4 @@ terraform/.terraform.lock.hcl
 
 tterraform/main.tf
 tterraform/variables.tf
+auth/__pycache__/
