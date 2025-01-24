@@ -21,7 +21,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+ 
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [registrationError, setRegistrationError] = useState('');
@@ -62,10 +62,7 @@ export default function RegisterPage() {
     formData.append('username', `${firstName} ${lastName}`);
     formData.append('email', email);
     formData.append('password', password);
-    if (profilePicture) {
-      formData.append('profile_picture', profilePicture);
-    }
-
+ 
     try {
       const response = await axios.post('http://localhost:8001/register/', formData, {
         headers: {
@@ -82,7 +79,7 @@ export default function RegisterPage() {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-      setProfilePicture(null);
+     
       setTermsAccepted(false);
       
     } catch (error: any) {
@@ -252,22 +249,8 @@ export default function RegisterPage() {
               )}
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="profilePicture" className="text-sm font-medium text-gray-700">
-                Profile Picture
-              </label>
-              <input
-                type="file"
-                id="profilePicture"
-                accept="image/*"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 outline-none"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    setProfilePicture(e.target.files[0]);
-                  }
-                }}
-              />
-            </div>
+          
+           
 
             <div className="flex items-start">
               <input

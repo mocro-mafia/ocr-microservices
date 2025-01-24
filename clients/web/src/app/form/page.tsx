@@ -31,10 +31,14 @@ const UploadPage: React.FC = () => {
       const response = await fetch("https://api.mindee.net/v1/products/mindee/international_id/v2/predict_async", {
         method: "POST",
         headers: {
-          "Authorization": `Token f022cfdc9ba73c5165d866f1907ea8e5`,
+          "Authorization": `Token fc7624ebe362855d69ab4b1b6151d851`,
         },
         body: formData,
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
       console.log("POST response:", data);
@@ -45,7 +49,7 @@ const UploadPage: React.FC = () => {
         const statusResponse = await fetch(`https://api.mindee.net/v1/products/mindee/international_id/v2/documents/queue/${jobId}`, {
           method: "GET",
           headers: {
-            "Authorization": `Token f022cfdc9ba73c5165d866f1907ea8e5`,
+            "Authorization": `Token fc7624ebe362855d69ab4b1b6151d851`,
           },
         });
 
