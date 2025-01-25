@@ -6,16 +6,19 @@ class MyPasswordField extends StatelessWidget {
     Key? key,
     required this.isPasswordVisible,
     required this.onTap,
+    this.controller, // Make the controller optional
   }) : super(key: key);
 
   final bool isPasswordVisible;
   final Function onTap;
+  final TextEditingController? controller; // Make it nullable
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextField(
+        controller: controller, // Use the controller if provided
         style: kBodyText.copyWith(
           color: Colors.white,
         ),
@@ -29,7 +32,7 @@ class MyPasswordField extends StatelessWidget {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {
-                
+                onTap(); // Call the onTap function
               },
               icon: Icon(
                 isPasswordVisible ? Icons.visibility : Icons.visibility_off,

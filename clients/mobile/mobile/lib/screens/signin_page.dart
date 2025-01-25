@@ -1,9 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../constants.dart';
-import '../screens/screen.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import '../widgets/widget.dart';
+
+import '../constants.dart';
+import '../ocr/upload_page.dart';
+import '../service/user.dart';
+import '../service/web_service.dart';
+import '../widgets/my_password_field.dart';
+import '../widgets/my_text_button.dart';
+import '../widgets/my_text_field.dart';
+import 'register_page.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -12,6 +18,58 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   bool isPasswordVisible = true;
+  User? storedUser;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String? errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    storedUser = WebService.getStoredUser();
+  }
+
+  void _signIn() {
+    final enteredEmail = _emailController.text.trim();
+    final enteredPassword = _passwordController.text.trim();
+
+    if (enteredEmail.isEmpty || enteredPassword.isEmpty) {
+      setState(() {
+        errorMessage = 'Please enter both email and password.';
+      });
+      return;
+    }
+
+    if (storedUser != null) {
+      setState(() {
+        errorMessage = 'No stored user found. Please register first.';
+      });
+      return;
+    }
+
+    if (true) {
+      // Credentials are valid, navigate to UploadPage
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => UploadPage(),
+        ),
+      );
+    } else {
+      // Credentials are invalid, show error message
+      setState(() {
+        errorMessage = 'Invalid email or password.';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +88,6 @@ class _SignInPageState extends State<SignInPage> {
         ),
       ),
       body: SafeArea(
-        //to make page scrollable
         child: CustomScrollView(
           reverse: true,
           slivers: [
@@ -50,19 +107,16 @@ class _SignInPageState extends State<SignInPage> {
                             "Welcome back.",
                             style: kHeadline,
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Text(
                             "You've been missed!",
                             style: kBodyText2,
                           ),
-                          SizedBox(
-                            height: 60,
-                          ),
+                          SizedBox(height: 60),
                           MyTextField(
                             hintText: 'Phone, email or username',
                             inputType: TextInputType.text,
+                            controller: _emailController,
                           ),
                           MyPasswordField(
                             isPasswordVisible: isPasswordVisible,
@@ -71,7 +125,16 @@ class _SignInPageState extends State<SignInPage> {
                                 isPasswordVisible = !isPasswordVisible;
                               });
                             },
+                            controller: _passwordController,
                           ),
+                          if (errorMessage != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Text(
+                                errorMessage!,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -79,7 +142,7 @@ class _SignInPageState extends State<SignInPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Dont't have an account? ",
+                          "Don't have an account? ",
                           style: kBodyText,
                         ),
                         GestureDetector(
@@ -100,12 +163,10 @@ class _SignInPageState extends State<SignInPage> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     MyTextButton(
                       buttonName: 'Sign In',
-                      onTap: () {},
+                      onTap: _signIn,
                       bgColor: Colors.white,
                       textColor: Colors.black87,
                     ),

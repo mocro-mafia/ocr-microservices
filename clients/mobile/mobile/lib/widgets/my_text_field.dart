@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../constants.dart';
 
 class MyTextField extends StatelessWidget {
@@ -7,15 +6,19 @@ class MyTextField extends StatelessWidget {
     Key? key,
     required this.hintText,
     required this.inputType,
+    this.controller, // Make the controller optional
   }) : super(key: key);
+
   final String hintText;
   final TextInputType inputType;
+  final TextEditingController? controller; // Make it nullable
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextField(
+        controller: controller, // Use the controller if provided
         style: kBodyText.copyWith(color: Colors.white),
         keyboardType: inputType,
         textInputAction: TextInputAction.next,
