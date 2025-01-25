@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
 
 import '../model/failure.dart';
-import 'user.dart';
+import 'users.dart';
 
 class WebService {
 
@@ -19,7 +19,7 @@ class WebService {
           body: json.encode(data),
           headers: <String, String>{'Content-Type': 'application/json'});
       if (response.statusCode == 200) {
-        User user = User.fromJson(json.decode(response.body));
+        Users user = Users.fromJson(json.decode(response.body));
         
         // Store user data in Hive
         var box = Hive.box('userBox');
@@ -50,7 +50,7 @@ class WebService {
     return result;
   }
 
-  static User? getStoredUser() {
+  static Users? getStoredUser() {
     var box = Hive.box('userBox');
     return box.get('user');
   }

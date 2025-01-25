@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../screens/screen.dart';
 import '../widgets/widget.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -29,7 +30,7 @@ class WelcomePage extends StatelessWidget {
                       height: 20,
                     ),
                     Text(
-                      "Enterprise team\ncollaboration.",
+                      "Welcome to the Moroccan ID OCR System",
                       style: kHeadline,
                       textAlign: TextAlign.center,
                     ),
@@ -39,11 +40,28 @@ class WelcomePage extends StatelessWidget {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: Text(
-                        "Bring together your files, your tools, project and people.Including a new mobile and desktop application.",
+                        "Simplifying Identity Verification\n Our cutting-edge OCR solution is designed to extract and digitize data from Moroccan identity cards quickly and accurately.",
                         style: kBodyText,
                         textAlign: TextAlign.center,
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _socialButton(
+                            'Google',
+                            const Icon(FontAwesomeIcons.google,
+                                color: Colors.black)),
+                        const SizedBox(width: 20),
+                        _socialButton(
+                            'Apple',
+                            const Icon(FontAwesomeIcons.apple,
+                                color: Colors.black)),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -87,6 +105,26 @@ class WelcomePage extends StatelessWidget {
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+   // Social Button Widget
+  Widget _socialButton(String text, Icon icon) {
+    return ElevatedButton.icon(
+      onPressed: () {},
+      icon: icon,
+      label: Text(
+        text,
+        style: const TextStyle(color: Colors.black),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        side: const BorderSide(color: Colors.grey),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );

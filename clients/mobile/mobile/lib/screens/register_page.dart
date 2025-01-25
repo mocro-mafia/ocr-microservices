@@ -59,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           MyTextField(
                             hintText: 'Last Name',
-                            inputType: TextInputType.lastname,
+                            inputType: TextInputType.name,
                           ),
                           MyTextField(
                             hintText: 'Email',

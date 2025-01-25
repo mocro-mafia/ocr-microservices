@@ -1,10 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 import '../constants.dart';
 import '../ocr/upload_page.dart';
-import '../service/user.dart';
+import '../service/users.dart';
 import '../service/web_service.dart';
 import '../widgets/my_password_field.dart';
 import '../widgets/my_text_button.dart';
@@ -18,7 +19,7 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   bool isPasswordVisible = true;
-  User? storedUser;
+  Users? storedUser;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? errorMessage;
@@ -29,7 +30,7 @@ class _SignInPageState extends State<SignInPage> {
     storedUser = WebService.getStoredUser();
   }
 
-  void _signIn() {
+  Future<void> _signIn() async {
     final enteredEmail = _emailController.text.trim();
     final enteredPassword = _passwordController.text.trim();
 
@@ -46,21 +47,28 @@ class _SignInPageState extends State<SignInPage> {
       });
       return;
     }
-
-    if (true) {
-      // Credentials are valid, navigate to UploadPage
-      Navigator.push(
-        context,
-        CupertinoPageRoute(
-          builder: (context) => UploadPage(),
-        ),
-      );
-    } else {
-      // Credentials are invalid, show error message
-      setState(() {
-        errorMessage = 'Invalid email or password.';
-      });
-    }
+    try {
+                  UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: enteredEmail,
+                    password: enteredPassword,
+                  );
+                  if (userCredential.user != null) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => UploadPage()),
+                    );
+                  }
+                } catch (e) {
+                  // Handle sign-in error
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Erreur de connexion: ${e.toString()}')),
+                  );
+                }
+                catch (e) {
+                  setState(() {
+                    errorMessage = 'Error signing in. Please try again.';
+                  });
+                }
   }
 
   @override
